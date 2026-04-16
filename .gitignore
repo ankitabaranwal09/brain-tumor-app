@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+
+# generated files
+*.jpg
+*.png
+*.pdf
+
+# system
+.DS_Store
