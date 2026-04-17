@@ -10,14 +10,13 @@ DATASET_PATH = os.path.join(BASE_DIR, "data", "dataset")
 
 print("📁 Dataset Path:", DATASET_PATH)
 
-print("📁 Dataset Path:", DATASET_PATH)
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 print("🔥 Loading Data...")
 
 
 datagen = ImageDataGenerator(
-    rescale=1./255,
+    preprocessing_function=tf.keras.applications.efficientnet.preprocess_input,
     validation_split=0.2,
 
     rotation_range=40,
@@ -25,7 +24,6 @@ datagen = ImageDataGenerator(
     shear_range=0.3,
     width_shift_range=0.3,
     height_shift_range=0.3,
-
     horizontal_flip=True,
     brightness_range=[0.7, 1.3],
     fill_mode='nearest'
@@ -64,12 +62,6 @@ base_model = tf.keras.applications.EfficientNetB0(
     input_shape=(224, 224, 3)
 )
 
-base_model = tf.keras.applications.MobileNetV2(
-    weights='imagenet',
-    include_top=False,
-    input_shape=(224,224,3)
-)
-
 base_model.trainable = False  # IMPORTANT (Phase 1)
 
 x = base_model.output
@@ -81,17 +73,12 @@ output = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 
 model = tf.keras.Model(inputs=base_model.input, outputs=output)
 
-base_model.trainable = True
-
-for layer in base_model.layers[:-30]:
-    layer.trainable = False
-
+base_model.trainable = False
 model.compile(
     optimizer='adam',
     loss='binary_crossentropy',
     metrics=['accuracy']
 )
-
 print("🚀 Phase 1 Training...")
 model.fit(
     train_data,
@@ -121,4 +108,5 @@ model.fit(
     class_weight=class_weights
 )
 
-model.save("brain_tumor_model.keras")
+model.save_weights("model/brain_tumor_weights.h5")
+print("✅ Weights saved successfully!")
