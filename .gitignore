@@ -1,35 +1,8 @@
-# Virtual Environment
 venv/
-env/
-.venv/
-
-# Python cache
 __pycache__/
 *.pyc
-*.pyo
-
-# Streamlit cache / config secrets
-.streamlit/secrets.toml
-
-# Temporary generated images
 *.jpg
-*.jpeg
 *.png
-
-# Generated reports
 *.pdf
-
-# Model checkpoints / old formats
-*.h5
-
-# OS files
 .DS_Store
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
-
-# Logs
-*.log
-data/dataset/
+.streamlit/secrets.toml
