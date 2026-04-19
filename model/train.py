@@ -108,5 +108,8 @@ model.fit(
     class_weight=class_weights
 )
 
-model.save("model/brain_tumor_model.keras")
+from tensorflow.keras.models import load_model
+
+model = load_model("model/brain_tumor_model.keras", compile=False)
+model.save("model/brain_tumor_model.h5")
 print("✅ Model saved successfully!")

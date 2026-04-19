@@ -91,7 +91,7 @@ st.markdown("""
 
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("model/brain_tumor_model.keras", compile = False)
+    return tf.keras.models.load_model("model/brain_tumor_model.h5", compile = False)
 
 model = load_model()
 
