@@ -91,7 +91,7 @@ st.markdown("""
 
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("model/brain_tumor_model.h5", compile = False)
+    return tf.keras.models.load_model("model/brain_tumor_model.keras", compile = False)
 
 model = load_model()
 
@@ -137,8 +137,13 @@ if uploaded_file is not None and analyze:
     with right:
         with st.spinner("🧠 Analyzing MRI scan..."):
 
-            img_resized = cv2.resize(img, (224, 224)) / 255.0
-            img_reshaped = np.reshape(img_resized, (1, 224, 224, 3))
+            img_resized = cv2.resize(img, (224, 224))
+            img_resized = cv2.cvtColor(img_resized, cv2.COLOR_BGR2RGB)
+            img_resized = img_resized.astype(np.float32)
+
+            img_reshaped = np.expand_dims(img_resized, axis=0)
+
+            img_reshaped = tf.keras.applications.efficientnet.preprocess_input(img_reshaped)
 
             pred = model.predict(img_reshaped)[0][0]
             confidence = pred if pred > threshold else 1 - pred
@@ -163,7 +168,7 @@ if uploaded_file is not None and analyze:
     st.info("🧠 Highlighted regions indicate where the model focused to make its prediction.")
     st.caption("Grad-CAM highlights regions influencing the model's decision")
 
-    heatmap = get_gradcam_heatmap(model, img_reshaped, "Conv_1")
+    heatmap = get_gradcam_heatmap(model, img_reshaped, "top_conv")
 
     temp_path = "temp.jpg"
     cv2.imwrite(temp_path, img)

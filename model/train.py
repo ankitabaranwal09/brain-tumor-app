@@ -108,5 +108,5 @@ model.fit(
     class_weight=class_weights
 )
 
-model.save_weights("model/brain_tumor_weights.h5")
-print("✅ Weights saved successfully!")
+model.save("model/brain_tumor_model.keras")
+print("✅ Model saved successfully!")
